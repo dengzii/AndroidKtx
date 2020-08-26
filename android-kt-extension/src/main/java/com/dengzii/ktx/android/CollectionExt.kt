@@ -5,12 +5,9 @@ package com.dengzii.ktx.android
 import android.os.Build
 
 /**
- * The compat version of Map#getOrDefault
- * for AndroidSdk version less then 24(Nougat)
- *
+ * The compat version of Map#getOrDefault for AndroidSdk version less then 24(Nougat)
  *  @see Map.getOrDefault
  */
-@Suppress("NOTHING_TO_INLINE")
 inline fun <K, V> Map<K, V>.getOrDefaultCompat(key: K, default: V): V {
     return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
         getOrDefault(key, default)

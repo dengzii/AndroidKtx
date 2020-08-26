@@ -27,15 +27,20 @@ inline fun Intent.getStringArrayOrElse(
 }
 
 /**
- * Check if the given [keys] are all exists, if not, [action] will invoke.
+ * Check if the given [keys] in intent extras are exists, if not, [action] will invoke.
+ *
+ * @param keys The keys need check exist
+ * @param action The callback when key does not exist
  */
-inline fun Intent.checkExtraExists(vararg keys: String, action: () -> Unit) {
-    if (!checkExtraExists(*keys)){
-        action()
+inline fun Intent.checkExtraExists(vararg keys: String, action: (String) -> Unit) {
+    keys.forEach {
+        if (!hasExtra(it)) {
+            action(it)
+        }
     }
 }
 
-inline fun Intent.checkExtraExists(vararg keys: String): Boolean {
+inline fun Intent.isExtraExists(vararg keys: String): Boolean {
     keys.forEach {
         if (!hasExtra(it)) {
             return false
