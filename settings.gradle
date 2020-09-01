@@ -1,3 +1,3 @@
-include ':android-kt-extension'
+include ':android-ktx'
 include ':app'
 rootProject.name = "AndroidKtExtension"

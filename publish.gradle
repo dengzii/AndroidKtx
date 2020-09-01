@@ -45,7 +45,7 @@ bintray {
     configurations = ['archives']
     pkg {
         repo = "maven"
-        name = 'android-kt-ext'
+        name = 'android-ktx'
         websiteUrl = 'https://github.com/dengzii/AndroidKtExtension'
         vcsUrl = 'https://github.com/dengzii/AndroidKtExtension.git'
         licenses = ["Apache-2.0"]

@@ -7,12 +7,31 @@ import android.content.res.TypedArray
 import android.util.AttributeSet
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AlphaAnimation
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.LinearLayout
 import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
+import androidx.annotation.UiThread
 import androidx.core.widget.ImageViewCompat
+
+
+inline fun ViewGroup.contains(child: View): Boolean {
+    return indexOfChild(child) != -1
+}
+
+inline fun ViewGroup.forEach(action: (View) -> Unit) {
+    for (i in 0 until childCount) {
+        action(getChildAt(i))
+    }
+}
+
+inline fun ViewGroup.forEachIndexed(action: (Int, View) -> Unit) {
+    for (i in 0 until childCount) {
+        action(i, getChildAt(i))
+    }
+}
 
 /**
  * Set View's visibility to [View.INVISIBLE]
@@ -27,6 +46,7 @@ inline fun View.hide() {
 inline fun View.gone() {
     visibility = View.GONE
 }
+
 /**
  * Set View's visibility to [View.VISIBLE]
  */
@@ -99,4 +119,18 @@ inline fun ImageView.setImageTintList(block: ViewStateBuilder.() -> Unit) {
     val viewStatesBuilder = ViewStateBuilder()
     block.invoke(viewStatesBuilder)
     setImageTintListCompat(viewStatesBuilder.toColorStateList(context))
+}
+
+inline fun View.fadeIn(duration: Long) {
+    this.clearAnimation()
+    val anim = AlphaAnimation(this.alpha, 1.0f)
+    anim.duration = duration
+    this.startAnimation(anim)
+}
+
+inline fun View.fadeOut(duration: Long) {
+    this.clearAnimation()
+    val anim = AlphaAnimation(this.alpha, 1.0f)
+    anim.duration = duration
+    this.startAnimation(anim)
 }
