@@ -1,6 +1,6 @@
 @file:Suppress("NOTHING_TO_INLINE")
 
-package com.dengzii.ktx.android
+package com.dengzii.ktx.android.content
 
 import android.os.Bundle
 

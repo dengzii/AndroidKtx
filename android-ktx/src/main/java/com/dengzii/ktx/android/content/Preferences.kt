@@ -1,7 +1,8 @@
-package com.dengzii.ktx.android
+package com.dengzii.ktx.android.content
 
 import android.content.Context
 import android.content.SharedPreferences
+import com.dengzii.ktx.android.getOrDefaultCompat
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
@@ -10,7 +11,6 @@ import kotlin.reflect.KProperty
  * author : dengzi.
  * e-mail : master@dengzii.com
  * time   : 2020/9/1
- * desc   : SharedPreferences delegate class.
  */
 open class Preferences(sharedPreferences: SharedPreferences) :
     SharedPreferences by sharedPreferences {
@@ -24,7 +24,7 @@ open class Preferences(sharedPreferences: SharedPreferences) :
     constructor(context: Context, name: String = DEFAULT_PREFERENCES_NAME)
             : this(context.getSharedPreferences(name, Context.MODE_PRIVATE))
 
-    inner class Preference<T : Any?> constructor(
+    inner class PreferenceDelegate<T : Any?> constructor(
         default: T,
         clazz: KClass<*>,
         keyName: String? = null
@@ -43,7 +43,7 @@ open class Preferences(sharedPreferences: SharedPreferences) :
             }
             val value = thisRef.all.getOrDefaultCompat(keyName, null) ?: return mDefault
             return if (value::class == mClazz) {
-                value as T
+                value as? T ?: mDefault
             } else {
                 mDefault
             }
@@ -63,10 +63,13 @@ open class Preferences(sharedPreferences: SharedPreferences) :
                         putStringSet(keyName, set)
                     }
                     null -> remove(keyName)
-                    else -> throw RuntimeException("Type is unsupported.")
+                    else -> throw RuntimeException("Type unsupported.")
                 }
             }
-            mEditor.commit()
         }
+    }
+
+    fun commit() {
+        mEditor.commit()
     }
 }

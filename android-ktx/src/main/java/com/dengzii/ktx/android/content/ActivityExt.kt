@@ -1,6 +1,6 @@
 @file:Suppress("NOTHING_TO_INLINE")
 
-package com.dengzii.ktx.android
+package com.dengzii.ktx.android.content
 
 import android.app.Activity
 import android.content.Intent
@@ -100,8 +100,6 @@ inline fun <reified T : Activity> Activity.startActivity() {
 
 /**
  * Start Activity with intent block.
- *
- * @param block The intent action scope block.
  */
 inline fun <reified T : Activity> Activity.startActivity(block: (Intent.() -> Unit)) {
     val intent = Intent(this, T::class.java)

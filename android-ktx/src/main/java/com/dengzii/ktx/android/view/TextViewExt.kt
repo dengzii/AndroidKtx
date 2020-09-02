@@ -1,13 +1,53 @@
 @file:Suppress("NOTHING_TO_INLINE")
 
-package com.dengzii.ktx.android
+package com.dengzii.ktx.android.view
 
 import android.content.res.ColorStateList
 import android.graphics.drawable.Drawable
+import android.text.Editable
+import android.text.TextWatcher
 import android.widget.TextView
 import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
 import androidx.core.widget.TextViewCompat
+import com.dengzii.ktx.android.content.getColorCompat
+import com.dengzii.ktx.android.content.getDrawableCompat
+
+class TextChangeWatcher {
+    var after: ((Editable?) -> Unit)? = null
+    var before: ((CharSequence?, Int, Int, Int) -> Unit)? = null
+    var on: ((CharSequence?, Int, Int, Int) -> Unit)? = null
+
+    fun afterChange(block: (Editable?) -> Unit) {
+        after = block
+    }
+
+    fun beforeChange(block: (s: CharSequence?, start: Int, count: Int, after: Int) -> Unit) {
+        before = block
+    }
+
+    fun onChange(block: (s: CharSequence?, start: Int, before: Int, count: Int) -> Unit) {
+        on = block
+    }
+}
+
+inline fun TextView.addTextChangeListener(action: TextChangeWatcher.() -> Unit) {
+    val watcher = TextChangeWatcher()
+    action(watcher)
+    this.addTextChangedListener(object : TextWatcher {
+        override fun afterTextChanged(s: Editable?) {
+            watcher.after?.invoke(s)
+        }
+
+        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            watcher.before?.invoke(s, start, count, after)
+        }
+
+        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+            watcher.on?.invoke(s, start, before, count)
+        }
+    })
+}
 
 inline fun TextView.setTextColorStateList(block: ViewStateBuilder.() -> Unit) {
     val viewStatesBuilder = ViewStateBuilder()
@@ -66,7 +106,7 @@ inline fun TextView.setDrawablesRelativeWithBoundsCompat(
     TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(this, start, top, end, bottom)
 }
 
-inline fun TextView.getCompoundDrawablesRelativeCompat(): Array<Drawable> {
+inline fun TextView.getCompoundDrawablesRelativeCompat(): Array<Drawable?> {
     return TextViewCompat.getCompoundDrawablesRelative(this)
 }
 

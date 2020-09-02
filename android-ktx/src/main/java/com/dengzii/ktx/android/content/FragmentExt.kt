@@ -1,11 +1,12 @@
 @file:Suppress("NOTHING_TO_INLINE")
 
-package com.dengzii.ktx.android
+package com.dengzii.ktx.android.content
 
 import android.content.Intent
 import android.view.View
 import androidx.annotation.IdRes
 import androidx.fragment.app.Fragment
+import kotlin.contracts.contract
 
 
 /**

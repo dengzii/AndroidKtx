@@ -1,6 +1,6 @@
 @file:Suppress("NOTHING_TO_INLINE", "unused")
 
-package com.dengzii.ktx.android
+package com.dengzii.ktx.android.content
 
 import android.content.Context
 import android.content.res.ColorStateList

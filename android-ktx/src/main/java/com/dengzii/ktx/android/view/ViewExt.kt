@@ -1,6 +1,6 @@
 @file:Suppress("NOTHING_TO_INLINE")
 
-package com.dengzii.ktx.android
+package com.dengzii.ktx.android.view
 
 import android.content.res.ColorStateList
 import android.content.res.TypedArray
@@ -13,8 +13,9 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
-import androidx.annotation.UiThread
 import androidx.core.widget.ImageViewCompat
+import com.dengzii.ktx.android.content.getColorCompat
+import com.dengzii.ktx.android.content.getDrawableCompat
 
 
 inline fun ViewGroup.contains(child: View): Boolean {
