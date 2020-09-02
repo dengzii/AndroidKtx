@@ -33,9 +33,9 @@ javadoc {
         encoding "UTF-8"
         charSet 'UTF-8'
         author true
-        version '1.0.0'
+        version '1.1.0'
         links "http://docs.oracle.com/javase/7/docs/api"
-        title 'android-kt-extension'
+        title 'android-ktx'
     }
 }
 
@@ -46,8 +46,8 @@ bintray {
     pkg {
         repo = "maven"
         name = 'android-ktx'
-        websiteUrl = 'https://github.com/dengzii/AndroidKtExtension'
-        vcsUrl = 'https://github.com/dengzii/AndroidKtExtension.git'
+        websiteUrl = 'https://github.com/dengzii/AndroidKtx'
+        vcsUrl = 'https://github.com/dengzii/AndroidKtx.git'
         licenses = ["Apache-2.0"]
         publish = true
     }
