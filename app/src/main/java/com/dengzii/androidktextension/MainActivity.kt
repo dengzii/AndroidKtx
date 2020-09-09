@@ -1,8 +1,14 @@
 package com.dengzii.androidktextension
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.dengzii.ktx.android.*
+import com.dengzii.ktx.android.content.requestSelectFile
+import com.dengzii.ktx.android.content.startActivityForResult
+import com.dengzii.ktx.android.view.setCompoundDrawableTintList
+import com.dengzii.ktx.android.view.setDrawableEnd
+import com.dengzii.ktx.android.view.setDrawableStart
+import com.dengzii.ktx.android.view.setTextColorStateList
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -23,7 +29,15 @@ class MainActivity : AppCompatActivity() {
             statePressed = R.color.colorAccent
         }
         tv_title.setOnClickListener {
+            startActivityForResult<SecondActivity> { reqCode, resCode, intent: Intent? ->
+                println("$reqCode, $resCode, ${intent?.extras?.keySet()?.toTypedArray()}")
+            }
+        }
 
+        bt_image.setOnClickListener {
+            requestSelectFile("image/*") {
+                println("=> " + it?.path)
+            }
         }
     }
 }

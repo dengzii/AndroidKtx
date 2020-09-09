@@ -28,6 +28,10 @@ inline fun <K, V> MutableMap<K, V>.put(entry: Map.Entry<K, V>) {
     put(entry.key, entry.value)
 }
 
+inline fun <K, V> MutableMap<K, V>.put(vararg pairs: Pair<K, V>) {
+    putAll(pairs)
+}
+
 inline fun <K, V> Map<K, V?>.filterNullValue(): Map<K, V> {
     val result = mutableMapOf<K, V>()
     forEach { entry ->
