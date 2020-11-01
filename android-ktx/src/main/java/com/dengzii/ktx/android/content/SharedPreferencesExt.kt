@@ -29,9 +29,10 @@ inline fun <reified T : Any?> Preferences.preference(
  *
  * @param action The function with `this` as its receiver
  */
-inline fun <T : Preferences> T.update(action: T.() -> Unit) {
+inline fun <T : Preferences> T.update(action: T.() -> Unit): T {
     action()
     commit()
+    return this
 }
 
 /**

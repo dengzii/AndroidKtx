@@ -3,10 +3,12 @@
 package com.dengzii.ktx.android.content
 
 import android.content.Context
+import android.content.pm.PackageManager
 import android.content.res.ColorStateList
 import android.content.res.Resources
 import android.graphics.drawable.Drawable
 import android.os.Build.VERSION
+import android.os.Process
 import android.util.DisplayMetrics
 import android.view.LayoutInflater
 import android.view.View
@@ -16,7 +18,6 @@ import android.widget.Toast
 import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
 import androidx.annotation.LayoutRes
-import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import java.io.InputStream
 
@@ -32,8 +33,21 @@ inline fun Context.getColorStateListCompat(@ColorRes resId: Int): ColorStateList
     return ResourcesCompat.getColorStateList(resources, resId, theme)
 }
 
-inline fun Context.checkSelfPermissionCompat(permission: String): Int {
-    return ContextCompat.checkSelfPermission(this, permission)
+inline fun Context.isPermissionGranted(permission: String): Boolean {
+    return checkPermission(
+        permission,
+        Process.myPid(),
+        Process.myUid()
+    ) == PackageManager.PERMISSION_GRANTED
+}
+
+inline fun Context.isPermissionAllGranted(vararg permissions: String): Boolean {
+    permissions.forEach {
+        if (!isPermissionGranted(it)) {
+            return false
+        }
+    }
+    return true
 }
 
 /**

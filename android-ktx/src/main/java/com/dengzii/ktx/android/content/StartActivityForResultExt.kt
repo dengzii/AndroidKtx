@@ -25,6 +25,7 @@ data class StartupParam(
 
 /**
  * Start activity for result, and get activity result in [callback] function.
+ * You need not care about the request code, just use the activity result.
  */
 inline fun <reified T : AppCompatActivity> T.startActivityForResult(
     intent: Intent,
@@ -51,6 +52,9 @@ inline fun <reified T : AppCompatActivity> T.startActivityForResult(
         .commitAllowingStateLoss()
 }
 
+/**
+ * Start activity for result without intent ext, the activity result pass to [callback] function.
+ */
 inline fun <reified T : AppCompatActivity> AppCompatActivity.startActivityForResult(
     crossinline callback: ActivityResultCallback
 ) {
@@ -64,12 +68,11 @@ inline fun <reified T : AppCompatActivity> T.startActivityForResult(
     startActivityForResult(intent, sRequestCode, callback)
 }
 
-inline fun <reified T : AppCompatActivity> T.startActivityForResult(
+inline fun <reified T : AppCompatActivity> AppCompatActivity.startActivityForResult(
     requestCode: Int,
-    clazz: Class<out Activity>,
     crossinline callback: ActivityResultCallback
 ) {
-    startActivityForResult(Intent(this, clazz), requestCode, callback)
+    startActivityForResult(Intent(this, T::class.java), requestCode, callback)
 }
 
 /**

@@ -31,7 +31,7 @@ class TextChangeWatcher {
     }
 }
 
-inline fun TextView.addTextChangeListener(action: TextChangeWatcher.() -> Unit) {
+inline fun TextView.addTextWatcher(action: TextChangeWatcher.() -> Unit) {
     val watcher = TextChangeWatcher()
     action(watcher)
     this.addTextChangedListener(object : TextWatcher {
