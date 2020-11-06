@@ -4,6 +4,8 @@ package com.dengzii.ktx.android.view
 
 import android.content.res.ColorStateList
 import android.content.res.TypedArray
+import android.graphics.Bitmap
+import android.graphics.Canvas
 import android.util.AttributeSet
 import android.view.View
 import android.view.ViewGroup
@@ -55,6 +57,18 @@ inline fun View.show() {
     visibility = View.VISIBLE
 }
 
+inline fun View.toggleVisible() {
+    visibility = when (visibility) {
+        View.VISIBLE -> View.INVISIBLE
+        View.INVISIBLE -> View.VISIBLE
+        else -> View.GONE
+    }
+}
+
+inline fun View.toggleEnable() {
+    isEnabled = !isEnabled
+}
+
 /**
  * Simplify [Context.obtainStyledAttributes] to action scope.
  */
@@ -71,8 +85,8 @@ inline fun View.withStyledAttrs(
 
 /**
  * Resolve measure spec to pair of spec mode and size.
- * @param measureSpec The measure spec
- * @return The pair of mode, size
+ * @param measureSpec The measure spec.
+ * @return The pair of mode, size.
  */
 inline fun View.resolveMeasureSpec(measureSpec: Int): Pair<Int, Int> {
     return Pair(View.MeasureSpec.getMode(measureSpec), View.MeasureSpec.getSize(measureSpec))
@@ -80,6 +94,7 @@ inline fun View.resolveMeasureSpec(measureSpec: Int): Pair<Int, Int> {
 
 /**
  * Set [LinearLayout.LayoutParams] as View's layoutParams, return action scope.
+ * @param block Setup your layoutParam here.
  */
 inline fun View.setLinearLayoutParam(block: LinearLayout.LayoutParams.() -> Unit) {
     val linearLayoutParam = LinearLayout.LayoutParams(
@@ -120,6 +135,17 @@ inline fun ImageView.setImageTintList(block: ViewStateBuilder.() -> Unit) {
     val viewStatesBuilder = ViewStateBuilder()
     block.invoke(viewStatesBuilder)
     setImageTintListCompat(viewStatesBuilder.toColorStateList(context))
+}
+
+/**
+ * Drawing view into Bitmap
+ */
+inline fun View.toBitmap(config: Bitmap.Config = Bitmap.Config.ARGB_8888): Bitmap {
+    val bitmap = Bitmap.createBitmap(width, height, config)
+    val canvas = Canvas(bitmap)
+    canvas.translate(-scrollX.toFloat(), -scrollY.toFloat())
+    draw(canvas)
+    return bitmap
 }
 
 inline fun View.fadeIn(duration: Long) {
