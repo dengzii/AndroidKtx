@@ -1,6 +1,6 @@
 @file:Suppress("NOTHING_TO_INLINE")
 
-package com.dengzii.ktx.android.view
+package com.dengzii.ktx.android
 
 import android.content.res.ColorStateList
 import android.graphics.drawable.Drawable

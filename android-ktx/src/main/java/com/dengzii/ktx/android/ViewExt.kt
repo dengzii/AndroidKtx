@@ -1,6 +1,6 @@
 @file:Suppress("NOTHING_TO_INLINE")
 
-package com.dengzii.ktx.android.view
+package com.dengzii.ktx.android
 
 import android.content.res.ColorStateList
 import android.content.res.TypedArray
@@ -18,7 +18,30 @@ import androidx.annotation.DrawableRes
 import androidx.core.widget.ImageViewCompat
 import com.dengzii.ktx.android.content.getColorCompat
 import com.dengzii.ktx.android.content.getDrawableCompat
+import com.dengzii.ktx.currentTimeMillis
 
+var viewShakeClickInterval = 300L
+
+inline var <T : View> T.lastClickTime: Long
+    get() = getTag(R.id.tag_view_last_click_time) as? Long ?: Long.MAX_VALUE
+    set(value) = setTag(R.id.tag_view_last_click_time, value)
+
+/**
+ * Set ClickListener with anti-shake.
+ * @param clickInterval the interval of shake.
+ * @param onClickListener the onClickListener.
+ */
+inline fun <T : View> T.antiShakeClick(
+    clickInterval: Long = viewShakeClickInterval,
+    crossinline onClickListener: (View) -> Unit
+) {
+    setOnClickListener {
+        val isShakeClick = currentTimeMillis - lastClickTime < clickInterval
+        if (isShakeClick) return@setOnClickListener
+        lastClickTime = currentTimeMillis
+        onClickListener(it)
+    }
+}
 
 inline fun ViewGroup.contains(child: View): Boolean {
     return indexOfChild(child) != -1
@@ -148,6 +171,10 @@ inline fun View.toBitmap(config: Bitmap.Config = Bitmap.Config.ARGB_8888): Bitma
     return bitmap
 }
 
+/**
+ * Start an alphaAnimation, from view's alpha into 1.0f.
+ * @param duration how long should the animation last.
+ */
 inline fun View.fadeIn(duration: Long) {
     this.clearAnimation()
     val anim = AlphaAnimation(this.alpha, 1.0f)
@@ -155,9 +182,13 @@ inline fun View.fadeIn(duration: Long) {
     this.startAnimation(anim)
 }
 
+/**
+ * Start an alphaAnimation, from view's alpha down to 0.5.
+ * @param duration how long should the animation last.
+ */
 inline fun View.fadeOut(duration: Long) {
     this.clearAnimation()
-    val anim = AlphaAnimation(this.alpha, 1.0f)
+    val anim = AlphaAnimation(this.alpha, 0.5f)
     anim.duration = duration
     this.startAnimation(anim)
 }

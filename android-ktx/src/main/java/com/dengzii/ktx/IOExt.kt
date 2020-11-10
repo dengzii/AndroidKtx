@@ -3,6 +3,9 @@ package com.dengzii.ktx
 import java.io.Closeable
 import java.io.IOException
 
+/**
+ * Close a [Closeable] object silent.
+ */
 fun Closeable?.closeIo() {
     if (this == null) return
     try {
@@ -12,6 +15,11 @@ fun Closeable?.closeIo() {
     }
 }
 
+/**
+ * Operate [Closeable] (Stream, Cursor etc.) silent, auto close the Closeable object, ignore catch exception.
+ * @param onException the [action] default return value when exception occurred.
+ * @param action the [Closeable] action scope block.
+ */
 inline fun <T> Closeable?.operate(onException: T, action: Closeable.() -> T): T {
     if (this == null) {
         return onException

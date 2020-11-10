@@ -1,9 +1,8 @@
-package com.dengzii.ktx.android.view
+package com.dengzii.ktx.android
 
 import android.content.Context
 import android.content.res.ColorStateList
 import android.graphics.drawable.StateListDrawable
-import com.dengzii.ktx.android.filterNullValue
 import com.dengzii.ktx.android.content.getColorCompat
 import com.dengzii.ktx.android.content.getDrawableCompat
 
