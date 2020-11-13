@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <item type="id" name="tag_view_last_click_time"/>
+    <item name="tag_view_last_click_time" type="id" />
+    <item name="tag_activity_lifecycle_callback" type="id" />
 </resources>
