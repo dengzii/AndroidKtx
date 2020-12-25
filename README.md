@@ -13,6 +13,14 @@
 - [Uri](https://github.com/dengzii/AndroidKtx#Uri)
 - [SharedPreferences](https://github.com/dengzii/AndroidKtx#SharedPreferences)
 
+### Download
+
+JCenter [ ![Download](https://api.bintray.com/packages/dengzi/maven/android-ktx/images/download.svg) ](https://bintray.com/dengzi/maven/android-ktx/_latestVersion)
+
+```groovy
+implementation 'com.dengzii:android-ktx:+'
+```
+
 ## Sample
 
 ### File
