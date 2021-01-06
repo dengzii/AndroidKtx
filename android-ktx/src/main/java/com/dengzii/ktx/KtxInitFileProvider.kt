@@ -7,6 +7,7 @@ class KtxInitFileProvider : FileProvider() {
     override fun onCreate(): Boolean {
         val appContext = context?.applicationContext as? Application ?: return true
         ContextUtils.init(appContext)
+        appContext.registerActivityLifecycleCallbacks(ActivityLifecycleCallbackImpl.INSTANCE)
         return true
     }
 }

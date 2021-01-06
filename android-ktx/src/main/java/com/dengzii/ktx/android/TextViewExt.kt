@@ -5,7 +5,11 @@ package com.dengzii.ktx.android
 import android.content.res.ColorStateList
 import android.graphics.drawable.Drawable
 import android.text.Editable
+import android.text.InputFilter
+import android.text.Spanned
 import android.text.TextWatcher
+import android.text.method.DigitsKeyListener
+import android.view.inputmethod.EditorInfo
 import android.widget.TextView
 import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
@@ -31,10 +35,50 @@ class TextChangeWatcher {
     }
 }
 
-inline fun TextView.addTextWatcher(action: TextChangeWatcher.() -> Unit) {
+fun TextView.addInputFilter(inputFilter: InputFilter) {
+    filters = filters
+        .toMutableList()
+        .apply {
+            add(inputFilter)
+        }.toTypedArray()
+}
+
+class CharacterFilter private constructor(private val accept: String) : InputFilter {
+
+    private val mChars: CharArray = accept.toCharArray()
+
+    companion object {
+        fun getInstance(accept: String): CharacterFilter {
+            return CharacterFilter(accept)
+        }
+    }
+
+    override fun filter(
+        source: CharSequence?, start: Int, end: Int,
+        dest: Spanned?, dstart: Int, dend: Int
+    ): CharSequence? {
+        println("source=$source, start=$start, end=$end, dest=$dest, dstart=$dstart, dend=$dend")
+        return null
+    }
+}
+
+fun TextView.setAcceptCharacter(accept: String) {
+    addInputFilter(CharacterFilter.getInstance(accept))
+}
+
+/**
+ * Set accepts the ASCII digits 0 through 9.
+ * @see [DigitsKeyListener.getInstance]
+ */
+fun TextView.setDigits(digits: String) {
+    keyListener = DigitsKeyListener.getInstance(digits)
+    inputType = if (inputType != EditorInfo.TYPE_NULL) inputType else EditorInfo.TYPE_CLASS_TEXT
+}
+
+inline fun TextView.addTextWatcher(action: TextChangeWatcher.() -> Unit): TextWatcher {
     val watcher = TextChangeWatcher()
     action(watcher)
-    this.addTextChangedListener(object : TextWatcher {
+    val textWatcher = object : TextWatcher {
         override fun afterTextChanged(s: Editable?) {
             watcher.after?.invoke(s)
         }
@@ -46,7 +90,9 @@ inline fun TextView.addTextWatcher(action: TextChangeWatcher.() -> Unit) {
         override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
             watcher.on?.invoke(s, start, before, count)
         }
-    })
+    }
+    addTextChangedListener(textWatcher)
+    return textWatcher
 }
 
 inline fun TextView.setTextColorStateList(block: ViewStateBuilder.() -> Unit) {
