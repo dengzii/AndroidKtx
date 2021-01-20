@@ -20,22 +20,28 @@ fun JSONObject.getJSONArray(key: String, default: JSONArray): JSONArray = getVal
 
 @Suppress("IMPLICIT_CAST_TO_ANY")
 private inline fun <reified T> JSONObject.getValue(key: String, default: T): T {
-    if (key.isEmpty()) {
-        return default
-    }
     return try {
-        when (T::class.java) {
-            Boolean::class.java -> getBoolean(key)
-            Int::class.java -> getInt(key)
-            String::class.java -> getString(key)
-            Double::class.java -> getDouble(key)
-            Long::class.java -> getLong(key)
-            JSONObject::class.java -> getJSONObject(key)
-            JSONArray::class.java -> getJSONArray(key)
-            else -> default
-        } as? T ?: default
+        getValue<T>(key) ?: default
     } catch (e: JSONException) {
         e.printStackTrace()
         default
     }
+}
+
+@Suppress("IMPLICIT_CAST_TO_ANY")
+@Throws(JSONException::class, ClassCastException::class)
+private inline fun <reified T> JSONObject.getValue(key: String): T? {
+    if (key.isEmpty()) {
+        return null
+    }
+    return when (T::class.java) {
+        Boolean::class.java -> getBoolean(key)
+        Int::class.java -> getInt(key)
+        String::class.java -> getString(key)
+        Double::class.java -> getDouble(key)
+        Long::class.java -> getLong(key)
+        JSONObject::class.java -> getJSONObject(key)
+        JSONArray::class.java -> getJSONArray(key)
+        else -> null
+    } as? T
 }

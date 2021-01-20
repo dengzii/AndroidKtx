@@ -1,43 +1,27 @@
 package com.dengzii.ktx.android
 
-import android.app.Activity
-import android.app.Application
+import android.annotation.SuppressLint
 import android.app.Dialog
-import android.os.Bundle
-import androidx.core.app.ComponentActivity
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.LifecycleOwner
 
-fun Dialog.showAutoHide() {
-    if (context is LifecycleOwner) {
-        (context as ComponentActivity).registerActivityLifecycleCallbacks(
-            object : Application.ActivityLifecycleCallbacks {
-                override fun onActivityPaused(activity: Activity) {
-                    TODO("Not yet implemented")
-                }
+/**
+ * Auto call [Dialog.cancel] when state changed to [Lifecycle.Event.ON_DESTROY].
+ * @param lifecycleOwner The lifecycle owner.
+ */
+@SuppressLint("RestrictedApi")
+fun Dialog.showWithLifecycle(lifecycleOwner: LifecycleOwner) {
 
-                override fun onActivityStarted(activity: Activity) {
-                    TODO("Not yet implemented")
+    lifecycleOwner.lifecycle.addObserver(object : LifecycleEventObserver {
+        override fun onStateChanged(source: LifecycleOwner, event: Lifecycle.Event) {
+            if (event == Lifecycle.Event.ON_DESTROY) {
+                source.lifecycle.removeObserver(this)
+                if (isShowing) {
+                    cancel()
                 }
-
-                override fun onActivityDestroyed(activity: Activity) {
-                    TODO("Not yet implemented")
-                }
-
-                override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) {
-                    TODO("Not yet implemented")
-                }
-
-                override fun onActivityStopped(activity: Activity) {
-                    TODO("Not yet implemented")
-                }
-
-                override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {
-                    TODO("Not yet implemented")
-                }
-
-                override fun onActivityResumed(activity: Activity) {
-                    TODO("Not yet implemented")
-                }
-            })
-    }
+            }
+        }
+    })
+    show()
 }

@@ -15,7 +15,3 @@ inline fun <T> justTry(action: () -> T): T? {
         null
     }
 }
-
-inline fun <T> T?.or(default: T): T {
-    return this ?: default
-}
