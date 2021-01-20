@@ -3,20 +3,13 @@ package com.dengzii.androidktextension
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
-import android.text.Editable
-import android.text.InputFilter
-import android.text.Spanned
-import android.text.format.DateUtils
-import android.text.method.KeyListener
-import android.view.KeyEvent
-import android.view.View
-import android.view.inputmethod.EditorInfo
 import androidx.appcompat.app.AppCompatActivity
 import com.dengzii.ktx.android.*
 import com.dengzii.ktx.android.content.getDrawableCompat
 import com.dengzii.ktx.android.content.requestSelectFile
 import com.dengzii.ktx.android.content.startActivityForResult
 import kotlinx.android.synthetic.main.activity_main.*
+import java.text.DecimalFormat
 
 class MainActivity : AppCompatActivity() {
 
@@ -42,9 +35,6 @@ class MainActivity : AppCompatActivity() {
         bt_bitmap.antiShakeClick {
             println("===")
         }
-
-        et_input.setAcceptCharacter("abcd")
-
 
         tv_title.setOnClickListener {
             startActivityForResult<SecondActivity> { reqCode, resCode, intent: Intent? ->

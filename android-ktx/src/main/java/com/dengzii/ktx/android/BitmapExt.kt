@@ -19,7 +19,7 @@ import androidx.annotation.FloatRange
 import androidx.annotation.IntRange
 import androidx.annotation.RequiresPermission
 import com.dengzii.ktx.ContextUtils
-import com.dengzii.ktx.closeIo
+import com.dengzii.ktx.closeSilent
 import com.dengzii.ktx.createOrExistsFile
 import com.dengzii.ktx.justTry
 import java.io.File
@@ -196,7 +196,7 @@ fun Bitmap.saveToAlbum(
             e.printStackTrace()
             false
         } finally {
-            os.closeIo()
+            os.closeSilent()
         }
     }
 }

@@ -6,9 +6,10 @@ import android.content.res.ColorStateList
 import android.graphics.drawable.Drawable
 import android.text.Editable
 import android.text.InputFilter
-import android.text.Spanned
+import android.text.InputType
 import android.text.TextWatcher
 import android.text.method.DigitsKeyListener
+import android.text.method.NumberKeyListener
 import android.view.inputmethod.EditorInfo
 import android.widget.TextView
 import androidx.annotation.ColorRes
@@ -16,6 +17,7 @@ import androidx.annotation.DrawableRes
 import androidx.core.widget.TextViewCompat
 import com.dengzii.ktx.android.content.getColorCompat
 import com.dengzii.ktx.android.content.getDrawableCompat
+
 
 class TextChangeWatcher {
     var after: ((Editable?) -> Unit)? = null
@@ -35,35 +37,35 @@ class TextChangeWatcher {
     }
 }
 
+/**
+ * Append [inputFilter] to [TextView.getFilters].
+ *
+ * @param inputFilter The input filter.
+ */
 fun TextView.addInputFilter(inputFilter: InputFilter) {
     filters = filters
-        .toMutableList()
-        .apply {
-            add(inputFilter)
-        }.toTypedArray()
-}
-
-class CharacterFilter private constructor(private val accept: String) : InputFilter {
-
-    private val mChars: CharArray = accept.toCharArray()
-
-    companion object {
-        fun getInstance(accept: String): CharacterFilter {
-            return CharacterFilter(accept)
-        }
-    }
-
-    override fun filter(
-        source: CharSequence?, start: Int, end: Int,
-        dest: Spanned?, dstart: Int, dend: Int
-    ): CharSequence? {
-        println("source=$source, start=$start, end=$end, dest=$dest, dstart=$dstart, dend=$dend")
-        return null
-    }
+            .toMutableList()
+            .apply {
+                add(inputFilter)
+            }.toTypedArray()
 }
 
 fun TextView.setAcceptCharacter(accept: String) {
-    addInputFilter(CharacterFilter.getInstance(accept))
+    setAcceptCharacter(accept.toCharArray())
+}
+
+/**
+ * Set accept input chars.
+ * @param accept Th accept chars.
+ */
+fun TextView.setAcceptCharacter(accept: CharArray) {
+    keyListener = object : NumberKeyListener() {
+        override fun getInputType(): Int {
+            return InputType.TYPE_MASK_VARIATION
+        }
+
+        override fun getAcceptedChars() = accept
+    }
 }
 
 /**
@@ -75,7 +77,7 @@ fun TextView.setDigits(digits: String) {
     inputType = if (inputType != EditorInfo.TYPE_NULL) inputType else EditorInfo.TYPE_CLASS_TEXT
 }
 
-inline fun TextView.addTextWatcher(action: TextChangeWatcher.() -> Unit): TextWatcher {
+inline fun TextView.setTextWatcher(action: TextChangeWatcher.() -> Unit): TextWatcher {
     val watcher = TextChangeWatcher()
     action(watcher)
     val textWatcher = object : TextWatcher {
@@ -128,26 +130,26 @@ inline fun TextView.setDrawableEnd(drawableEnd: Drawable) {
 inline fun TextView.setDrawableStart(@DrawableRes drawableStart: Int) {
     val drawable = getCompoundDrawablesRelativeCompat()
     setDrawablesRelativeWithBoundsCompat(
-        context.getDrawableCompat(drawableStart),
-        drawable[1],
-        drawable[2],
-        drawable[3]
+            context.getDrawableCompat(drawableStart),
+            drawable[1],
+            drawable[2],
+            drawable[3]
     )
 }
 
 inline fun TextView.setDrawableEnd(@DrawableRes drawableEnd: Int) {
     val drawable = getCompoundDrawablesRelativeCompat()
     setDrawablesRelativeWithBoundsCompat(
-        drawable[0],
-        drawable[1],
-        context.getDrawableCompat(drawableEnd),
-        drawable[3]
+            drawable[0],
+            drawable[1],
+            context.getDrawableCompat(drawableEnd),
+            drawable[3]
     )
 }
 
 inline fun TextView.setDrawablesRelativeWithBoundsCompat(
-    start: Drawable?, top: Drawable?, end: Drawable?,
-    bottom: Drawable?
+        start: Drawable?, top: Drawable?, end: Drawable?,
+        bottom: Drawable?
 ) {
     TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(this, start, top, end, bottom)
 }
