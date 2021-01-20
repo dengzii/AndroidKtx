@@ -6,7 +6,7 @@ import java.io.IOException
 /**
  * Close a [Closeable] object silent.
  */
-fun Closeable?.closeIo() {
+fun Closeable?.closeSilent() {
     if (this == null) return
     try {
         close()
@@ -29,7 +29,7 @@ inline fun <T> Closeable?.operate(onException: T, action: Closeable.() -> T): T 
     } catch (e: Exception) {
         e.printStackTrace()
     } finally {
-        closeIo()
+        closeSilent()
     }
     return onException
 }

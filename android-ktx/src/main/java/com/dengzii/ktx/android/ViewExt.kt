@@ -23,7 +23,7 @@ import com.dengzii.ktx.currentTimeMillis
 var viewShakeClickInterval = 300L
 
 inline var <T : View> T.lastClickTime: Long
-    get() = getTag(R.id.tag_view_last_click_time) as? Long ?: Long.MAX_VALUE
+    get() = getTag(R.id.tag_view_last_click_time) as? Long ?: 0
     set(value) = setTag(R.id.tag_view_last_click_time, value)
 
 /**

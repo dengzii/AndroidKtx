@@ -50,7 +50,7 @@ open class Preferences(sharedPreferences: SharedPreferences) :
         }
 
         override fun setValue(thisRef: SharedPreferences, property: KProperty<*>, value: T) {
-            val keyName = property.name
+            val keyName = mKeyName ?: property.name
             with(mEditor) {
                 when (value) {
                     is Int -> putInt(keyName, value)

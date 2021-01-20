@@ -20,6 +20,16 @@ inline fun <K, V> Map<K, V>.getOrDefaultCompat(key: K, default: V): V {
     }
 }
 
+inline fun <K, V> MutableMap<K, V>.getOrPut(key: K, init: V): V? {
+    val ret = get(key)
+    return if (ret != null) {
+        ret
+    } else {
+        put(key, init)
+        init
+    }
+}
+
 inline fun <K, V> MutableMap<K, V>.put(pair: Pair<K, V>) {
     put(pair.first, pair.second)
 }

@@ -77,7 +77,7 @@ fun File.md5(): ByteArray? {
     } catch (e: IOException) {
         e.printStackTrace()
     } finally {
-        dis.closeIo()
+        dis.closeSilent()
     }
     return null
 }

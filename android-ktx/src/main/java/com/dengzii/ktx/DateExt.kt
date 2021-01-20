@@ -12,6 +12,20 @@ inline fun Date.toMillis(): Long {
     return calendar.timeInMillis
 }
 
+/**
+ * @see [SimpleDateFormat]
+ */
+inline fun Date.format(format: String): String {
+    return SimpleDateFormat(format, Locale.getDefault()).format(this)
+}
+
+inline fun Date.toCalendar(): Calendar {
+    val calendar = Calendar.getInstance()
+    calendar.time = this
+    return calendar
+}
+
+
 inline fun String.toDate(dateFormat: String): Date? {
     return justTry {
         val simpleDateFormat = SimpleDateFormat(dateFormat, Locale.getDefault())
