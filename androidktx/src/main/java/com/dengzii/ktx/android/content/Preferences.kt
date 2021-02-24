@@ -13,9 +13,10 @@ import kotlin.reflect.KProperty
  * time   : 2020/9/1
  */
 open class Preferences(sharedPreferences: SharedPreferences) :
-    SharedPreferences by sharedPreferences {
+        SharedPreferences by sharedPreferences {
 
     private val mEditor: SharedPreferences.Editor by lazy { edit() }
+    private val mCache = mutableMapOf<String, Any?>()
 
     companion object {
         const val DEFAULT_PREFERENCES_NAME = "shared_preferences"
@@ -25,11 +26,11 @@ open class Preferences(sharedPreferences: SharedPreferences) :
             : this(context.getSharedPreferences(name, Context.MODE_PRIVATE))
 
     inner class PreferenceDelegate<T : Any?> constructor(
-        default: T,
-        clazz: KClass<*>,
-        keyName: String? = null
-    ) :
-        ReadWriteProperty<SharedPreferences, T> {
+            default: T,
+            clazz: KClass<*>,
+            keyName: String? = null,
+            private val cache: Boolean = true
+    ) : ReadWriteProperty<SharedPreferences, T> {
 
         private val mDefault: T = default
         private val mKeyName: String? = keyName
@@ -38,15 +39,24 @@ open class Preferences(sharedPreferences: SharedPreferences) :
         @Suppress("UNCHECKED_CAST")
         override fun getValue(thisRef: SharedPreferences, property: KProperty<*>): T {
             val keyName = mKeyName ?: property.name
-            if (!thisRef.contains(keyName)) {
-                return mDefault
+            if (cache && mCache.containsKey(keyName)) {
+                val ret = mCache[keyName] as T
+                if (ret != null) {
+                    return ret
+                }
             }
-            val value = thisRef.all.getOrDefaultCompat(keyName, null) ?: return mDefault
-            return if (value::class == mClazz) {
-                value as? T ?: mDefault
-            } else {
+            val ret = if (!thisRef.contains(keyName)) {
                 mDefault
+            } else {
+                val value = thisRef.all.getOrDefaultCompat(keyName, null) ?: return mDefault
+                if (value::class == mClazz) {
+                    value as? T ?: mDefault
+                } else {
+                    mDefault
+                }
             }
+            mCache[keyName] = ret as? Any
+            return ret
         }
 
         override fun setValue(thisRef: SharedPreferences, property: KProperty<*>, value: T) {

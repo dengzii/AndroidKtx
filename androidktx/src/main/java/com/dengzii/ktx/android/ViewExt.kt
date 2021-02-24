@@ -92,6 +92,10 @@ inline fun View.toggleEnable() {
     isEnabled = !isEnabled
 }
 
+inline fun View.removeFromParent() {
+    (parent as? ViewGroup)?.removeView(this)
+}
+
 /**
  * Simplify [Context.obtainStyledAttributes] to action scope.
  */

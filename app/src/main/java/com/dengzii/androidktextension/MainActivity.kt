@@ -41,7 +41,7 @@ class MainActivity : AppCompatActivity() {
                 println("$reqCode, $resCode, ${intent?.extras?.keySet()?.toTypedArray()}")
             }
         }
-
+        et_input.
         bt_image.setOnClickListener {
             requestSelectFile("image/*") {
                 println("=> " + it?.path)
