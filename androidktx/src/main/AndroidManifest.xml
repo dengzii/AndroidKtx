@@ -4,7 +4,7 @@
     <application>
         <provider
             android:name="com.dengzii.ktx.KtxInitFileProvider"
-            android:authorities="com.dengzii.ktx.provider"
+            android:authorities="${applicationId}.ktx.provider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data
