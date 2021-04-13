@@ -17,6 +17,7 @@ inline fun <reified T : Any?> Preferences.preference(
         is Boolean?,
         is Float?,
         is String?,
+        is Long?,
         is Set<*>? -> {
             PreferenceDelegate<T>(defaultValue, T::class, keyName)
         }
